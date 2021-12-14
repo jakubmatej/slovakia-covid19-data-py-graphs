@@ -21,10 +21,7 @@ url = 'https://raw.githubusercontent.com/Institut-Zdravotnych-Analyz/covid19-dat
 if is_url_ok(url):
   raw = pd.read_csv(url, sep=';', index_col=0)
 
-  # Reverse order of rows in case of different source format (e.g. commit 2021-12-06)
-  raw = raw.iloc[::-1]
-
-  release_date = raw['Date'].values[-1]
+  release_date = raw['Date'].values[0]
 
   # --- Set Data range -> start from date
   # row_no = raw.loc[raw['Date'] == '2021-08-01'].first_valid_index()
@@ -35,29 +32,26 @@ if is_url_ok(url):
 
   # --- Create pivot table
   p = pd.pivot_table(raw, index=['Date', 'age_group'] , columns=['Vaccinated'], values='Admissions', aggfunc=np.sum, fill_value=0)
+  p = p.rename(columns={False:'unvax', True:'vax'})
 
   # --- Split Data into categories
 
   # Remove rows with zero
   # When using the average function, if weights are given, they can not add up to 0 because that leads to division by 0
-  wa_unvax = p.loc[~(p[False] == 0)]
+  wa_unvax = p.loc[~(p['unvax'] == 0)]
   # Applay reset_index to avoid MultiIndex
   wa_unvax = wa_unvax.reset_index(1)
-  wa_unvax = wa_unvax.rename(columns={False:'unvax', True:'vax'})
-  wa_unvax['age_group'] = wa_unvax['age_group'].astype(np.int8) # Convert age_group values to intiger
 
-  wa_vax = p.loc[~(p[True] == 0)]
+  wa_vax = p.loc[~(p['vax'] == 0)]
   wa_vax = wa_vax.reset_index(1)
-  wa_vax = wa_vax.rename(columns={False:'unvax', True:'vax'})
-  wa_vax['age_group'] = wa_vax['age_group'].astype(np.int8)
 
   # --- Calculate Average by weights for each category
   # https://stackoverflow.com/questions/31521027/groupby-weighted-average-and-sum-in-pandas-dataframe
-  wa_unvax = wa_unvax.groupby(wa_unvax.index).apply(lambda x: np.average(x.age_group, weights=x.unvax))
+  wa_unvax = wa_unvax.groupby(wa_unvax.index).apply(lambda x: np.average(x.age_group.astype(np.int8), weights=x.unvax))
   wa_unvax = wa_unvax.rename('unvaccinated') # Renamed for proper graph legend
   wa_unvax = wa_unvax.to_frame()
 
-  wa_vax = wa_vax.groupby(wa_vax.index).apply(lambda x: np.average(x.age_group, weights=x.vax))
+  wa_vax = wa_vax.groupby(wa_vax.index).apply(lambda x: np.average(x.age_group.astype(np.int8), weights=x.vax))
   wa_vax = wa_vax.rename('vaccinated')
   wa_vax = wa_vax.to_frame()
 
