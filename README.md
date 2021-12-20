@@ -8,9 +8,9 @@ Python graphs of [open data sets](https://github.com/Institut-Zdravotnych-Analyz
 To see all graphs go to "res" folder.
 
 1. Hospitalizations\Ventilated_Admissions_Age_WAverage_by_Vaccine_Daily.py
-![Daily Slovakia Covid Hospital Ventilated Admissions - age_group Weighted Average & 7ma](./res/Hospitalizations/2021-12-15_Ventilated_Admissions_Age_WAverage_by_Vaccine_Daily.png)
+![Daily Slovakia Covid Hospital Ventilated Admissions - age_group Weighted Average & 7ma](./res/Hospitalizations/2021-12-19_Ventilated_Admissions_Age_WAverage_by_Vaccine_Daily.png)
 
 2. Hospitalizations\Ventilated_Admissions_Age_WAverage_by_Vaccine_Monthly.py
-![Monthly Slovakia Covid Hospital Ventilated Admissions - age_group Weighted Average](./res/Hospitalizations/2021-12-15_Ventilated_Admissions_Age_WAverage_by_Vaccine_Monthly.png)
+![Monthly Slovakia Covid Hospital Ventilated Admissions - age_group Weighted Average](./res/Hospitalizations/2021-12-19_Ventilated_Admissions_Age_WAverage_by_Vaccine_Monthly.png)
 
 [changelog]: ./CHANGELOG.md
