@@ -101,7 +101,7 @@ if is_url_ok(url):
                 fontsize=8)
 
   # Set x, y Axis range
-  plt.xlim(left=xticks_start - datetime.timedelta(days=4))
+  plt.xlim(left=xticks_start - datetime.timedelta(days=4), right=xticks_list[-1])
   plt.ylim(0, 100)
   plt.savefig('./res/Hospitalizations/' + str(release_date) + '_Ventilated_Admissions_Age_WAverage_by_Vaccine_Daily.png')
   plt.show()
