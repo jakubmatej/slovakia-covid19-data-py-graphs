@@ -3,7 +3,8 @@ import requests
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from matplotlib.ticker import (MultipleLocator, FormatStrFormatter, AutoMinorLocator)
+import matplotlib.dates as mdates
+import matplotlib.ticker as mticker
 
 def is_url_ok(url_string, print_error=True):
   try:
@@ -65,43 +66,38 @@ if is_url_ok(url):
   result['vaccinated_7ma'] = result['vaccinated'].rolling(7).mean()
 
   # --- Plot Data
-  fig = result.plot.line(title='Slovakia Covid Hospital Ventilated Admissions - age_group Weighted Average & 7ma', figsize=(10,8), color = ['#FFDFA4', '#A4DBFD', '#ffa500', '#069af3'])
+  ax = result.plot.line(title='Slovakia Covid Hospital Ventilated Admissions - age_group Weighted Average & 7ma', figsize=(10,8), color = ['#FFDFA4', '#A4DBFD', '#ffa500', '#069af3'])
+  plt.subplots_adjust(left=0.06, right=0.99, bottom= 0.065, top=0.96)
 
-  fig.set_xlabel("Date")
-  fig.set_ylabel("Age")
+  ax.set_xlabel(None)
+  ax.set_ylabel("Age")
 
-  fig.grid(visible=True, which='both')
-  fig.minorticks_on()
+  ax.grid(visible=True, which='both')
+  ax.minorticks_on()
 
-  fig.grid(which='major', color='#a9a9a9', linewidth=1)
-  fig.grid(which='minor', color='#e0e0e0', linewidth=0.6)
-  fig.tick_params(which='minor', color='#e0e0e0')
-  # fig.xaxis.set_major_locator(MultipleLocator(10)) --> Custom X axis major ticks. See below
-  fig.xaxis.set_minor_locator(MultipleLocator(1))
-  fig.yaxis.set_major_locator(MultipleLocator(10))
-  fig.yaxis.set_minor_locator(MultipleLocator(2.5))
-
-  # Custom X axis ticks - week interval
-  xticks_start = datetime.datetime(2021,8,2) # Monday
-  xticks_end = datetime.datetime(2021,12,31)
-  xticks_interval = 7
-  xticks_range = ((xticks_end - xticks_start) / datetime.timedelta(days=xticks_interval))
-  xticks_list=[]
-  xticks_list.append(xticks_start)
-  for i in range(0, int(xticks_range)):
-      xticks_list.append(xticks_list[i] + datetime.timedelta(days=xticks_interval))
-  plt.xticks(xticks_list)
+  ax.grid(which='major', color='#a9a9a9', linewidth=1)
+  ax.grid(which='minor', color='#e0e0e0', linewidth=0.6)
+  ax.tick_params(which='minor', color='#e0e0e0')
+  ax.xaxis.set_major_locator(mdates.MonthLocator(interval=1))
+  ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m'))
+  ax.xaxis.set_minor_locator(mdates.WeekdayLocator())
+  ax.yaxis.set_major_locator(mticker.MultipleLocator(10))
+  ax.yaxis.set_minor_locator(mticker.MultipleLocator(2.5))
+  # Format x tick labels
+  for label in ax.get_xticklabels(which='major'):
+    label.set(rotation=0, horizontalalignment='center')
+  # Set x and y axis range
+  xlimoOffset = datetime.timedelta(days=7)
+  ax.set_xlim(datetime.datetime(2021, 8, 1) - xlimoOffset, datetime.datetime(2022, 5, 1) + xlimoOffset)
+  ax.set_ylim(0, 100)
 
   # Note inside plot area - foot note
-  fig.annotate('Source: github.com/Institut-Zdravotnych-Analyz/covid19-data (' + str(release_date) + ')',
-                xy = (1.0, -0.2),
+  ax.annotate('Source: github.com/Institut-Zdravotnych-Analyz/covid19-data (' + str(release_date) + ')',
+                xy = (1.0, -0.06),
                 xycoords='axes fraction',
                 ha='right',
                 va='center',
                 fontsize=8)
 
-  # Set x, y Axis range
-  plt.xlim(left=xticks_start - datetime.timedelta(days=4), right=xticks_list[-1])
-  plt.ylim(0, 100)
-  plt.savefig('./res/Hospitalizations/' + str(release_date) + '_Ventilated_Admissions_Age_WAverage_by_Vaccine_Daily.png')
+  plt.savefig('./res/Hospitalizations/Ventilated_Admissions_Age_WAverage_by_Vaccine_Daily.png')
   plt.show()

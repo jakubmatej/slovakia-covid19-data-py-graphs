@@ -9,5 +9,7 @@ This is the markdown todo file for project slovakia-covid19-data-py-graphs.
 
 ## Automatization
 
+- [ ] Prepare Ventilated_Admissions_Age_WAverage_by_Vaccine_Daily.py for automatization.
+- [x] Prepare Ventilated_Admissions_Age_WAverage_by_Vaccine_Monthly.py for automatization. - 2022-01-19
 - [ ] Create GitHub Actions.
 - [ ] Create csv export.

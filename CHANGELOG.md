@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.0.1 - 2022-01-19
+
+### Updated
+- Minor update of Ventilated_Admissions_Age_WAverage_by_Vaccine_Daily.py - minor plot code update, code corrections, extended date range.
+- Major update of Ventilated_Admissions_Age_WAverage_by_Vaccine_Monthly.py - new plot code, added 2nd axis, extended date range.
+- Changed graph figures location (prepare for automatization).
+
 ## 1.0.0 - 2021-12-09
 
 ### Added
