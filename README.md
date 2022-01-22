@@ -1,5 +1,5 @@
 # slovakia-covid19-data-py-graphs
-[Version 1.0.1][changelog]
+[Version 1.0.2][changelog]
 
 Python graphs of [open data sets](https://github.com/Institut-Zdravotnych-Analyz/covid19-data) related to the covid19 pandemic in Slovakia provided by the MoH of Slovakia.
 

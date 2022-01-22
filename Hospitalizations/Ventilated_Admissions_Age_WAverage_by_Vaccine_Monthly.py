@@ -6,9 +6,9 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import matplotlib.ticker as mticker
 
-def is_url_ok(url_string, print_error=True):
+def is_uri_ok(uri_string, print_error=True):
   try:
-    r = requests.head(url_string)
+    r = requests.head(uri_string)
     r.raise_for_status()
     return True
   except requests.exceptions.RequestException as error:
@@ -17,10 +17,10 @@ def is_url_ok(url_string, print_error=True):
     pass
   return False
 
-url = 'https://raw.githubusercontent.com/Institut-Zdravotnych-Analyz/covid19-data/main/Hospitals/OpenData_Slovakia_Covid_Hospital_UPV_AdmissionDischarge.csv'
+uri = 'https://raw.githubusercontent.com/Institut-Zdravotnych-Analyz/covid19-data/main/Hospitals/OpenData_Slovakia_Covid_Hospital_UPV_AdmissionDischarge.csv'
 
-if is_url_ok(url):
-  raw = pd.read_csv(url, sep=';', index_col=0)
+if is_uri_ok(uri):
+  raw = pd.read_csv(uri, sep=';', index_col=0)
 
   release_date = raw['Date'].values[0]
 
@@ -83,9 +83,7 @@ if is_url_ok(url):
       ax.xaxis.set_major_locator(mdates.MonthLocator(interval=1))
       ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m'))
       ax.xaxis.set_minor_locator(mticker.NullLocator())
-      # Format x tick labels
-      for label in ax.get_xticklabels(which='major'):
-        label.set(rotation=0, horizontalalignment='center')
+      ax.set_xlabel(None)
       # Set x axis range
       xlimoOffset = datetime.timedelta(days=7)
       ax.set_xlim(datetime.datetime(2021, 8, 1) - xlimoOffset, datetime.datetime(2022, 5, 1) + xlimoOffset)
@@ -109,13 +107,16 @@ if is_url_ok(url):
 
   # 1. Axis - Slovakia Covid Hospital Ventilated Admissions
   ax = axs[1]
-  ax.bar(result.index, result['unvaccinated_qty'].values, width=10)
+  ax.bar(result.index, result['unvaccinated_qty'].values, bottom=result['vaccinated_qty'].values, width=10)
   ax.bar(result.index, result['vaccinated_qty'].values, width=10)
   ax.set_title('Slovakia Covid Hospital Ventilated Admissions', loc='left', y=0.9, x=0.02, fontsize='medium', backgroundcolor='white')
   ax.yaxis.set_major_locator(mticker.MultipleLocator(100))
   ax.yaxis.set_minor_locator(mticker.MultipleLocator(50))
+  # Format x tick labels
+  for label in ax.get_xticklabels(which='major'):
+    label.set(rotation=0, horizontalalignment='center')
   ax.set_ylabel('Admissions')
-  ax.set_ylim(0, 800)
+  ax.set_ylim(0, 900)
 
   # Note inside plot area - foot note
   ax.annotate('Source: github.com/Institut-Zdravotnych-Analyz/covid19-data (' + str(release_date) + ')',
@@ -126,4 +127,3 @@ if is_url_ok(url):
                 fontsize=8)
 
   plt.savefig('./res/Hospitalizations/Ventilated_Admissions_Age_WAverage_by_Vaccine_Monthly.png')
-  plt.show()

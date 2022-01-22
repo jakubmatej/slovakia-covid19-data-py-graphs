@@ -6,9 +6,9 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import matplotlib.ticker as mticker
 
-def is_url_ok(url_string, print_error=True):
+def is_uri_ok(uri_string, print_error=True):
   try:
-    r = requests.head(url_string)
+    r = requests.head(uri_string)
     r.raise_for_status()
     return True
   except requests.exceptions.RequestException as error:
@@ -17,10 +17,10 @@ def is_url_ok(url_string, print_error=True):
     pass
   return False
 
-url = 'https://raw.githubusercontent.com/Institut-Zdravotnych-Analyz/covid19-data/main/Hospitals/OpenData_Slovakia_Covid_Hospital_UPV_AdmissionDischarge.csv'
+uri = 'https://raw.githubusercontent.com/Institut-Zdravotnych-Analyz/covid19-data/main/Hospitals/OpenData_Slovakia_Covid_Hospital_UPV_AdmissionDischarge.csv'
 
-if is_url_ok(url):
-  raw = pd.read_csv(url, sep=';', index_col=0)
+if is_uri_ok(uri):
+  raw = pd.read_csv(uri, sep=';', index_col=0)
 
   release_date = raw['Date'].values[0]
 
@@ -69,9 +69,6 @@ if is_url_ok(url):
   ax = result.plot.line(title='Slovakia Covid Hospital Ventilated Admissions - age_group Weighted Average & 7ma', figsize=(10,8), color = ['#FFDFA4', '#A4DBFD', '#ffa500', '#069af3'])
   plt.subplots_adjust(left=0.06, right=0.99, bottom= 0.065, top=0.96)
 
-  ax.set_xlabel(None)
-  ax.set_ylabel("Age")
-
   ax.grid(visible=True, which='both')
   ax.minorticks_on()
 
@@ -86,6 +83,8 @@ if is_url_ok(url):
   # Format x tick labels
   for label in ax.get_xticklabels(which='major'):
     label.set(rotation=0, horizontalalignment='center')
+  ax.set_xlabel(None)
+  ax.set_ylabel("Age")
   # Set x and y axis range
   xlimoOffset = datetime.timedelta(days=7)
   ax.set_xlim(datetime.datetime(2021, 8, 1) - xlimoOffset, datetime.datetime(2022, 5, 1) + xlimoOffset)
@@ -100,4 +99,3 @@ if is_url_ok(url):
                 fontsize=8)
 
   plt.savefig('./res/Hospitalizations/Ventilated_Admissions_Age_WAverage_by_Vaccine_Daily.png')
-  plt.show()

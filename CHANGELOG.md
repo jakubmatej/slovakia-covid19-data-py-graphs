@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.0.2 - 2022-01-22
+
+### Added
+- Added workflow daily-figures-update.yaml
+
+### Updated
+- Minor tweaks in Ventilated_Admissions_Age_WAverage_by_Vaccine_Daily.py and Ventilated_Admissions_Age_WAverage_by_Vaccine_Monthly.py
+
 ## 1.0.1 - 2022-01-19
 
 ### Updated
