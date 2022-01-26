@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.0.3 - 2022-01-26
+
+### Added
+- Added python scripts for Daily Slovakia Covid Hospital Admissions and age_group Weighted Average.
+- Added graph figure.
+
+### Updated
+- Updated workflow daily-figures-update.yaml
+
 ## 1.0.2 - 2022-01-22
 
 ### Added

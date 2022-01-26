@@ -21,6 +21,7 @@ jobs:
       run: |
         python "./Hospitalizations/Ventilated_Admissions_Age_WAverage_by_Vaccine_Daily.py"
         python "./Hospitalizations/Ventilated_Admissions_Age_WAverage_by_Vaccine_Monthly.py"
+        python "./Hospitalizations/Admissions_Age_WAverage_by_Vaccine_Daily.py"
     - name: Commit Figures
       run: |
         git config --local user.email "action@github.com"
