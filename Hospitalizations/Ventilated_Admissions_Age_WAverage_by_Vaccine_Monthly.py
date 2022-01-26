@@ -95,10 +95,10 @@ if is_uri_ok(uri):
   ax.set_title('Slovakia Covid Hospital Ventilated Admissions - age_group Weighted Average', loc='left', y=0.9, x=0.02, fontsize='medium', backgroundcolor='white')
   ax.set_xticklabels([])
   ax.yaxis.set_major_locator(mticker.MultipleLocator(10))
-  ax.yaxis.set_minor_locator(mticker.MultipleLocator(1))
+  ax.yaxis.set_minor_locator(mticker.MultipleLocator(2.5))
   ax.legend()
   ax.set_ylabel('Age')
-  ax.set_ylim(40, 80)
+  ax.set_ylim(35, 85)
   # Create marker labels
   yAnnotateOffset = 0.03
   for idx, row in result.iterrows():
