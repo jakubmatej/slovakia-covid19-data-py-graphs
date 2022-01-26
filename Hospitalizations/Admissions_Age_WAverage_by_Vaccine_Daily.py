@@ -145,5 +145,4 @@ if is_uri_ok(uri):
                 va="center",
                 fontsize=8)
 
-  plt.savefig('./res/Hospitalizations/Admissions_Age_WAverage_by_Vaccine.png')
-  plt.show()
+  plt.savefig('./res/Hospitalizations/Admissions_Age_WAverage_by_Vaccine_Daily.png')
