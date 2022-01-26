@@ -62,24 +62,21 @@ if is_uri_ok(uri):
   result = pd.DataFrame.join(wa_unvaccinated.to_frame(), wa_vaccinated.to_frame(), on='Date')
   result = result.join(unk.to_frame(), on='Date')
 
-  # - Add moving average
-  result['unvaccinated_7ma'] = result['unvaccinated'].rolling(7).mean()
-  result['vaccinated_7ma'] = result['vaccinated'].rolling(7).mean()
-  result['unknown_7ma'] = result['unknown'].rolling(7).mean()
+  # - Moving average
+  result['unvaccinated_7ma'] = result['unvaccinated'].rolling(7, closed='left').mean()
+  result['vaccinated_7ma'] = result['vaccinated'].rolling(7, closed='left').mean()
+  result['unknown_7ma'] = result['unknown'].rolling(7, closed='left').mean()
 
-  # --- Sum admissions Weekly - Axis 1
-  rawAdm = raw
-  rawAdm['WeekDateMO'] = rawAdm['Date'] - rawAdm['Date'].dt.weekday.astype('timedelta64[D]') # Create week start date (Monday)
-
-  # - Sum vaccine status (True/False) on admissions
-  pA = pd.pivot_table(rawAdm, index=['WeekDateMO', 'age_group'] , columns=['Vaccinated'], values='Admissions', aggfunc=np.sum, fill_value=0)
-  pA = pA.rename(columns={False:'unvaccinated', True:'vaccinated'})
-
-  # - Sum admissions
+  # --- Sum admissions Daily - Axis 1
   resultAD = pd.DataFrame()
-  resultAD['unvaccinated_adm'] = pA['unvaccinated'].groupby(level=['WeekDateMO']).sum()
-  resultAD['vaccinated_adm'] = pA['vaccinated'].groupby(level=['WeekDateMO']).sum()
-  resultAD['unknown_adm'] = pA['unknown'].groupby(level=['WeekDateMO']).sum()
+  resultAD['unvaccinated_adm'] = p['unvaccinated'].groupby(level=['Date']).sum()
+  resultAD['vaccinated_adm'] = p['vaccinated'].groupby(level=['Date']).sum()
+  resultAD['unknown_adm'] = p['unknown'].groupby(level=['Date']).sum()
+
+  # - Moving average
+  resultAD['unvaccinated_adm_7ma'] = resultAD['unvaccinated_adm'].rolling(7, closed='left').mean()
+  resultAD['vaccinated_adm_7ma'] = resultAD['vaccinated_adm'].rolling(7, closed='left').mean()
+  resultAD['unknown_adm_7ma'] = resultAD['unknown_adm'].rolling(7, closed='left').mean()
 
   # print(result)
   # print(resultAD)
@@ -90,7 +87,7 @@ if is_uri_ok(uri):
 
   # Common axis settings:
   for ax in axs:
-    ax.set_prop_cycle(color=['#898989','#069af3','#ffa500'])
+    ax.set_prop_cycle(color=['#D9D9D9','#A4DBFD','#FFDFA4','#898989','#069af3','#ffa500'])
     # Grid, major and minor ticks settings
     ax.grid(visible=True, which='both')
     ax.minorticks_on()
@@ -109,7 +106,6 @@ if is_uri_ok(uri):
   
   # 0. Axis - Daily weighten average age
   ax = axs[0]
-  ax.set_prop_cycle(color=['#D9D9D9','#A4DBFD','#FFDFA4','#898989','#069af3','#ffa500'])
   ax.plot(result['unknown'], label='unknown')
   ax.plot(result['vaccinated'], label='vaccinated')
   ax.plot(result['unvaccinated'], label='unvaccinated')
@@ -125,17 +121,21 @@ if is_uri_ok(uri):
   ax.set_ylabel("Age")
   ax.set_ylim(35, 85)
 
-  # 1. Axis - Weekly admissions
+  # 1. Axis - Daily admissions
   ax = axs[1]
-  ax.bar(resultAD.index, resultAD['unknown_adm'].values, width=4, align='edge')
-  ax.bar(resultAD.index, resultAD['vaccinated_adm'].values, bottom=resultAD['unknown_adm'].values, width=4, align='edge')
-  ax.bar(resultAD.index, resultAD['unvaccinated_adm'].values, bottom=resultAD['unknown_adm'].values+resultAD['vaccinated_adm'].values, width=4, align='edge')  
-  ax.set_title('Slovakia Covid Hospital Admission Weekly', loc='left', y=0.9, x=0.02, fontsize='medium', backgroundcolor='white')
-  ax.yaxis.set_major_locator(mticker.MultipleLocator(1000))
-  ax.yaxis.set_minor_locator(mticker.MultipleLocator(200))
+  ax.bar(resultAD.index, resultAD['unknown_adm'].values, width=1, align='edge')
+  ax.bar(resultAD.index, resultAD['vaccinated_adm'].values, bottom=resultAD['unknown_adm'].values, width=1, align='edge')
+  ax.bar(resultAD.index, resultAD['unvaccinated_adm'].values, bottom=resultAD['unknown_adm'].values+resultAD['vaccinated_adm'].values, width=1, align='edge')
+  ax.set_prop_cycle(color=['#898989','#069af3','#ffa500'])
+  ax.plot(resultAD['unknown_adm_7ma'], label='unknown_7ma')
+  ax.plot(resultAD['vaccinated_adm_7ma']+resultAD['unknown_adm_7ma'].values, label='vaccinated_7ma')
+  ax.plot(resultAD['unvaccinated_adm_7ma']+resultAD['unknown_adm_7ma'].values+resultAD['vaccinated_adm_7ma'].values, label='unvaccinated_7ma')
+  ax.set_title('Slovakia Covid Hospital Admission Daily', loc='left', y=0.9, x=0.02, fontsize='medium', backgroundcolor='white')
+  ax.yaxis.set_major_locator(mticker.MultipleLocator(100))
+  ax.yaxis.set_minor_locator(mticker.MultipleLocator(20))
   ax.set_xlabel(None)
   ax.set_ylabel("Admissions", labelpad=0)
-  ax.set_ylim(0, 3000)
+  ax.set_ylim(0, 500)
 
   # Note inside plot
   ax.annotate('Source: github.com/Institut-Zdravotnych-Analyz/covid19-data (' + str(release_date) + ')',

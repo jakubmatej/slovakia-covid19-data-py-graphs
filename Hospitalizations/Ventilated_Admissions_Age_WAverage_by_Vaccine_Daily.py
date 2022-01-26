@@ -62,8 +62,8 @@ if is_uri_ok(uri):
   # print(type(result))
 
   # --- Add moving average
-  result['unvaccinated_7ma'] = result['unvaccinated'].rolling(7).mean()
-  result['vaccinated_7ma'] = result['vaccinated'].rolling(7).mean()
+  result['unvaccinated_7ma'] = result['unvaccinated'].rolling(7, closed='left').mean()
+  result['vaccinated_7ma'] = result['vaccinated'].rolling(7, closed='left').mean()
 
   # --- Plot Data
   ax = result.plot.line(title='Slovakia Covid Hospital Ventilated Admissions - age_group Weighted Average & 7ma', figsize=(10,8), color = ['#FFDFA4', '#A4DBFD', '#ffa500', '#069af3'])
