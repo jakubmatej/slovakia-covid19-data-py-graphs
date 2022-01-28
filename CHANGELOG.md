@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.0.4 - 2022-01-28
+
+### Updated
+- Updated workflow daily-figures-update.yaml
+
 ## 1.0.3 - 2022-01-26
 
 ### Added
