@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Updated
 - Updated workflow daily-figures-update.yaml
+- Updated Admissions_Age_WAverage_by_Vaccine_Daily.py - Daily admissions axis plot changed from bars to filled area, fixed raw data by cleansing NaN
 
 ## 1.0.3 - 2022-01-26
 

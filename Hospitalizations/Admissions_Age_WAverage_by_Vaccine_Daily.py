@@ -32,8 +32,9 @@ if is_uri_ok(uri):
   # --- Convert date to datetime
   raw['Date'] = raw['Date'].apply(pd.to_datetime)
 
-  # Replace NA vaccinated status with unknown
-  raw['Vaccinated'] = raw['Vaccinated'].fillna(value='unknown')
+  # --- Cleansing raw
+  raw['Vaccinated'] = raw['Vaccinated'].fillna(value='unknown') # Replace NaN with word unknown
+  #raw['age_group'] = raw['age_group'].fillna(value=55) # Replace NaN with value 55 (average age of unvaccinated COVID-19 patient) - currently in use in Daily admissions axis only
 
   # --- Sum Vaccine status (True/False) on Admissions - Axis 0
   p = pd.pivot_table(raw, index=['Date', 'age_group'] , columns=['Vaccinated'], values='Admissions', aggfunc=np.sum, fill_value=0, dropna=False)
@@ -68,10 +69,14 @@ if is_uri_ok(uri):
   result['unknown_7ma'] = result['unknown'].rolling(7, closed='left').mean()
 
   # --- Sum admissions Daily - Axis 1
+  raw['age_group'] = raw['age_group'].fillna(value=55) # Cleanse raw
+  pA = pd.pivot_table(raw, index=['Date', 'age_group'] , columns=['Vaccinated'], values='Admissions', aggfunc=np.sum, fill_value=0, dropna=False)
+  pA = pA.rename(columns={False:'unvaccinated', True:'vaccinated'})
+
   resultAD = pd.DataFrame()
-  resultAD['unvaccinated_adm'] = p['unvaccinated'].groupby(level=['Date']).sum()
-  resultAD['vaccinated_adm'] = p['vaccinated'].groupby(level=['Date']).sum()
-  resultAD['unknown_adm'] = p['unknown'].groupby(level=['Date']).sum()
+  resultAD['unvaccinated_adm'] = pA['unvaccinated'].groupby(level=['Date']).sum()
+  resultAD['vaccinated_adm'] = pA['vaccinated'].groupby(level=['Date']).sum()
+  resultAD['unknown_adm'] = pA['unknown'].groupby(level=['Date']).sum()
 
   # - Moving average
   resultAD['unvaccinated_adm_7ma'] = resultAD['unvaccinated_adm'].rolling(7, closed='left').mean()
@@ -123,10 +128,12 @@ if is_uri_ok(uri):
 
   # 1. Axis - Daily admissions
   ax = axs[1]
-  ax.bar(resultAD.index, resultAD['unknown_adm'].values, width=1, align='edge')
-  ax.bar(resultAD.index, resultAD['vaccinated_adm'].values, bottom=resultAD['unknown_adm'].values, width=1, align='edge')
-  ax.bar(resultAD.index, resultAD['unvaccinated_adm'].values, bottom=resultAD['unknown_adm'].values+resultAD['vaccinated_adm'].values, width=1, align='edge')
-  ax.set_prop_cycle(color=['#898989','#069af3','#ffa500'])
+  ax.plot(resultAD['unknown_adm'], label='unknown_adm')
+  ax.plot(resultAD[['vaccinated_adm', 'unknown_adm']].sum(axis=1), label='vaccinated_adm')
+  ax.plot(resultAD[['unvaccinated_adm', 'unknown_adm', 'vaccinated_adm']].sum(axis=1), label='unvaccinated_adm')
+  ax.fill_between(x=resultAD['unknown_adm'].index, y1=resultAD['unknown_adm'].values)
+  ax.fill_between(x=resultAD['vaccinated_adm'].index, y1=resultAD[['vaccinated_adm', 'unknown_adm']].sum(axis=1), y2=resultAD['unknown_adm'].values)
+  ax.fill_between(x=resultAD['unvaccinated_adm'].index, y1=resultAD[['unvaccinated_adm', 'unknown_adm', 'vaccinated_adm']].sum(axis=1), y2=resultAD[['vaccinated_adm', 'unknown_adm']].sum(axis=1))
   ax.plot(resultAD['unknown_adm_7ma'], label='unknown_7ma')
   ax.plot(resultAD[['vaccinated_adm_7ma', 'unknown_adm_7ma']].sum(axis=1), label='vaccinated_7ma')
   ax.plot(resultAD[['unvaccinated_adm_7ma', 'unknown_adm_7ma', 'vaccinated_adm_7ma']].sum(axis=1), label='unvaccinated_7ma')
