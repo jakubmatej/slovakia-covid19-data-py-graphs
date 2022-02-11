@@ -35,6 +35,7 @@ if is_uri_ok(uri):
   # --- Cleansing raw
   raw['Vaccinated'] = raw['Vaccinated'].fillna(value='unknown') # Replace NaN with word unknown
   #raw['age_group'] = raw['age_group'].fillna(value=55) # Replace NaN with value 55 (average age of unvaccinated COVID-19 patient) - currently in use in Daily admissions axis only
+  raw['age_group'] = raw['age_group']+5 # Middle value of age_group (e.g. age_group 0 = 0-10 age --> will be 5)
 
   # --- Sum Vaccine status (True/False) on Admissions - Axis 0
   p = pd.pivot_table(raw, index=['Date', 'age_group'] , columns=['Vaccinated'], values='Admissions', aggfunc=np.sum, fill_value=0, dropna=False)
@@ -92,7 +93,7 @@ if is_uri_ok(uri):
 
   # Common axis settings:
   for ax in axs:
-    ax.set_prop_cycle(color=['#D9D9D9','#A4DBFD','#FFDFA4','#898989','#069af3','#ffa500'])
+    ax.set_prop_cycle(color=['#D9D9D9','#A4DBFD','#FFDFA4','#6b6b6b','#069af3','#ffa500'])
     # Grid, major and minor ticks settings
     ax.grid(visible=True, which='both')
     ax.minorticks_on()
@@ -117,14 +118,14 @@ if is_uri_ok(uri):
   ax.plot(result['unknown_7ma'], label='unknown_7ma')
   ax.plot(result['vaccinated_7ma'], label='vaccinated_7ma')
   ax.plot(result['unvaccinated_7ma'], label='unvaccinated_7ma')
-  ax.set_title('Slovakia Covid Hospital Admission Daily - age_group Weighted Average & 7ma', loc='left', y=0.9, x=0.02, fontsize='medium', backgroundcolor='white')
+  ax.set_title('Slovakia Covid Hospital Admission Daily by Vaccine status - age_group Weighted Average & 7ma', loc='left', y=0.9, x=0.02, fontsize='medium', backgroundcolor='white')
   ax.set_xticklabels([])
   ax.yaxis.set_major_locator(mticker.MultipleLocator(10))
-  ax.yaxis.set_minor_locator(mticker.MultipleLocator(2.5))
+  ax.yaxis.set_minor_locator(mticker.MultipleLocator(2))
   ax.legend(loc='upper right')
   ax.set_xlabel(None)
   ax.set_ylabel("Age")
-  ax.set_ylim(35, 85)
+  ax.set_ylim(40, 90)
 
   # 1. Axis - Daily admissions
   ax = axs[1]
@@ -137,7 +138,7 @@ if is_uri_ok(uri):
   ax.plot(resultAD['unknown_adm_7ma'], label='unknown_7ma')
   ax.plot(resultAD[['vaccinated_adm_7ma', 'unknown_adm_7ma']].sum(axis=1), label='vaccinated_7ma')
   ax.plot(resultAD[['unvaccinated_adm_7ma', 'unknown_adm_7ma', 'vaccinated_adm_7ma']].sum(axis=1), label='unvaccinated_7ma')
-  ax.set_title('Slovakia Covid Hospital Admission Daily', loc='left', y=0.9, x=0.02, fontsize='medium', backgroundcolor='white')
+  ax.set_title('Slovakia Covid Hospital Admission Daily by Vaccine status', loc='left', y=0.9, x=0.02, fontsize='medium', backgroundcolor='white')
   ax.yaxis.set_major_locator(mticker.MultipleLocator(100))
   ax.yaxis.set_minor_locator(mticker.MultipleLocator(20))
   ax.set_xlabel(None)

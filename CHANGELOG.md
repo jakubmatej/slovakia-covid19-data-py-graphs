@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.0.5 - 2022-02-11
+
+### Added
+- Added python scripts for Daily Slovakia Covid Hospital Admissions and age_group Weighted Average.
+- Added new graph figures.
+
+### Updated
+- Updated Admissions_Age_WAverage_by_Vaccine_Daily.py - Updated raw data cleansing by changing age_group to middle value, updated y limit and minor ticks on Axis 0
+- Updated workflow daily-figures-update.yaml
+
 ## 1.0.4 - 2022-01-28
 
 ### Updated
@@ -11,7 +21,7 @@ All notable changes to this project will be documented in this file.
 ## 1.0.3 - 2022-01-26
 
 ### Added
-- Added python scripts for Daily Slovakia Covid Hospital Admissions and age_group Weighted Average.
+- Added python scripts for Daily Slovakia Covid Hospital Admissions by Vaccine status and age_group Weighted Average.
 - Added graph figure.
 
 ### Updated
