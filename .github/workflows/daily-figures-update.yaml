@@ -23,6 +23,7 @@ jobs:
         python "./Hospitalizations/Ventilated_Admissions_Age_WAverage_by_Vaccine_Monthly.py"
         python "./Hospitalizations/Admissions_Age_WAverage_by_Vaccine_Daily.py"
         python "./Hospitalizations/Admissions_Age_WAverage_Basic_Daily.py"
+        python "./Hospitalizations/Admissions_Stacked_by_Age_Daily.py"
     - name: Commit figures
       run: |
         bash .github/workflows/commit.sh

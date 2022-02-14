@@ -65,9 +65,9 @@ if is_uri_ok(uri):
   result = result.join(unk.to_frame(), on='Date')
 
   # - Moving average
-  result['unvaccinated_7ma'] = result['unvaccinated'].rolling(7, closed='left').mean()
-  result['vaccinated_7ma'] = result['vaccinated'].rolling(7, closed='left').mean()
-  result['unknown_7ma'] = result['unknown'].rolling(7, closed='left').mean()
+  result['unvaccinated_ma7'] = result['unvaccinated'].rolling(7, closed='left').mean()
+  result['vaccinated_ma7'] = result['vaccinated'].rolling(7, closed='left').mean()
+  result['unknown_ma7'] = result['unknown'].rolling(7, closed='left').mean()
 
   # --- Sum admissions Daily - Axis 1
   raw['age_group'] = raw['age_group'].fillna(value=55) # Cleanse raw
@@ -80,9 +80,9 @@ if is_uri_ok(uri):
   resultAD['unknown_adm'] = pA['unknown'].groupby(level=['Date']).sum()
 
   # - Moving average
-  resultAD['unvaccinated_adm_7ma'] = resultAD['unvaccinated_adm'].rolling(7, closed='left').mean()
-  resultAD['vaccinated_adm_7ma'] = resultAD['vaccinated_adm'].rolling(7, closed='left').mean()
-  resultAD['unknown_adm_7ma'] = resultAD['unknown_adm'].rolling(7, closed='left').mean()
+  resultAD['unvaccinated_adm_ma7'] = resultAD['unvaccinated_adm'].rolling(7, closed='left').mean()
+  resultAD['vaccinated_adm_ma7'] = resultAD['vaccinated_adm'].rolling(7, closed='left').mean()
+  resultAD['unknown_adm_ma7'] = resultAD['unknown_adm'].rolling(7, closed='left').mean()
 
   # print(result)
   # print(resultAD)
@@ -115,10 +115,10 @@ if is_uri_ok(uri):
   ax.plot(result['unknown'], label='unknown')
   ax.plot(result['vaccinated'], label='vaccinated')
   ax.plot(result['unvaccinated'], label='unvaccinated')
-  ax.plot(result['unknown_7ma'], label='unknown_7ma')
-  ax.plot(result['vaccinated_7ma'], label='vaccinated_7ma')
-  ax.plot(result['unvaccinated_7ma'], label='unvaccinated_7ma')
-  ax.set_title('Slovakia Covid Hospital Admission Daily by Vaccine status - age_group Weighted Average & 7ma', loc='left', y=0.9, x=0.02, fontsize='medium', backgroundcolor='white')
+  ax.plot(result['unknown_ma7'], label='unknown_ma7')
+  ax.plot(result['vaccinated_ma7'], label='vaccinated_ma7')
+  ax.plot(result['unvaccinated_ma7'], label='unvaccinated_ma7')
+  ax.set_title('Slovakia Covid Hospital Admission Daily by Vaccine status - age_group Weighted Average & ma7', loc='left', y=0.9, x=0.02, fontsize='medium', backgroundcolor='white')
   ax.set_xticklabels([])
   ax.yaxis.set_major_locator(mticker.MultipleLocator(10))
   ax.yaxis.set_minor_locator(mticker.MultipleLocator(2))
@@ -135,9 +135,9 @@ if is_uri_ok(uri):
   ax.fill_between(x=resultAD['unknown_adm'].index, y1=resultAD['unknown_adm'].values)
   ax.fill_between(x=resultAD['vaccinated_adm'].index, y1=resultAD[['vaccinated_adm', 'unknown_adm']].sum(axis=1), y2=resultAD['unknown_adm'].values)
   ax.fill_between(x=resultAD['unvaccinated_adm'].index, y1=resultAD[['unvaccinated_adm', 'unknown_adm', 'vaccinated_adm']].sum(axis=1), y2=resultAD[['vaccinated_adm', 'unknown_adm']].sum(axis=1))
-  ax.plot(resultAD['unknown_adm_7ma'], label='unknown_7ma')
-  ax.plot(resultAD[['vaccinated_adm_7ma', 'unknown_adm_7ma']].sum(axis=1), label='vaccinated_7ma')
-  ax.plot(resultAD[['unvaccinated_adm_7ma', 'unknown_adm_7ma', 'vaccinated_adm_7ma']].sum(axis=1), label='unvaccinated_7ma')
+  ax.plot(resultAD['unknown_adm_ma7'], label='unknown_ma7')
+  ax.plot(resultAD[['vaccinated_adm_ma7', 'unknown_adm_ma7']].sum(axis=1), label='vaccinated_ma7')
+  ax.plot(resultAD[['unvaccinated_adm_ma7', 'unknown_adm_ma7', 'vaccinated_adm_ma7']].sum(axis=1), label='unvaccinated_ma7')
   ax.set_title('Slovakia Covid Hospital Admission Daily by Vaccine status', loc='left', y=0.9, x=0.02, fontsize='medium', backgroundcolor='white')
   ax.yaxis.set_major_locator(mticker.MultipleLocator(100))
   ax.yaxis.set_minor_locator(mticker.MultipleLocator(20))

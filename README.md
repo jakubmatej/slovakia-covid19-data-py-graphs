@@ -1,5 +1,5 @@
 # slovakia-covid19-data-py-graphs
-[Version 1.0.5][changelog]
+[Version 1.0.6][changelog]
 
 Python graphs of [open data sets](https://github.com/Institut-Zdravotnych-Analyz/covid19-data) related to the covid19 pandemic in Slovakia provided by the MoH of Slovakia.
 
@@ -18,5 +18,8 @@ To see all graphs go to "res" folder.
 
 4. Hospitalizations\Admissions_Age_WAverage_Basic_Daily.py
 ![Daily Slovakia Covid Hospital Admissions and age_group Weighted Average](./res/Hospitalizations/Admissions_Age_WAverage_Basic_Daily.png)
+
+5. Hospitalizations\Admissions_Stacked_by_Age_Daily.png
+![Slovakia Covid Hospital Admission Daily ma7 - Stacked by age_group](./res/Hospitalizations/Admissions_Stacked_by_Age_Daily.png)
 
 [changelog]: ./CHANGELOG.md

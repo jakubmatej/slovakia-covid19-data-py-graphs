@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.0.6 - 2022-02-14
+
+### Added
+- Added python scripts for Slovakia Covid Hospital Admission Daily ma7 - Stacked by age_group.
+- Added new graph figures.
+
+### Updated
+- Minor tweaks on all hospitalization scripts.
+- Updated workflow daily-figures-update.yaml
+- Updated graph figures.
+
 ## 1.0.5 - 2022-02-11
 
 ### Added

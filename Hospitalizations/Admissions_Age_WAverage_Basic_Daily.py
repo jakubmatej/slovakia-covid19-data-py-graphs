@@ -41,12 +41,12 @@ if is_uri_ok(uri):
   # --- Daily Admissions - Axis 1
   df = pd.DataFrame()
   df['Admissions'] = raw['Admissions'].groupby(raw['Date']).sum()
-  df['Admissions_7ma'] = df['Admissions'].rolling(7, closed='left').mean()
+  df['Admissions_ma7'] = df['Admissions'].rolling(7, closed='left').mean()
 
   # --- Daily weighten average age_group - Axis 0
   raw = raw.dropna(subset=['age_group']) # Additional cleansing before weighten average --> Remove NaN for proper calculation
   df['age_group_WAverage'] = raw.groupby(raw['Date']).apply(lambda x: np.average(x.age_group, weights=x.Admissions))
-  df['age_group_WAverage_7ma'] = df['age_group_WAverage'].rolling(7, closed='left').mean()
+  df['age_group_WAverage_ma7'] = df['age_group_WAverage'].rolling(7, closed='left').mean()
 
 
   # --- Plot figure
@@ -75,8 +75,8 @@ if is_uri_ok(uri):
   # 0. Axis - Daily weighten average age
   ax = axs[0]
   ax.plot(df['age_group_WAverage'], label='Daily')
-  ax.plot(df['age_group_WAverage_7ma'], label='Daily_7ma')
-  ax.set_title('Slovakia Covid Hospital Admission Daily - age_group Weighted Average & 7ma', loc='left', y=0.9, x=0.02, fontsize='medium', backgroundcolor='white')
+  ax.plot(df['age_group_WAverage_ma7'], label='Daily_ma7')
+  ax.set_title('Slovakia Covid Hospital Admission Daily - age_group Weighted Average & ma7', loc='left', y=0.9, x=0.02, fontsize='medium', backgroundcolor='white')
   ax.set_xticklabels([])
   ax.yaxis.set_major_locator(mticker.MultipleLocator(10))
   ax.yaxis.set_minor_locator(mticker.MultipleLocator(2))
@@ -88,9 +88,9 @@ if is_uri_ok(uri):
   # 1. Axis - Daily admissions
   ax = axs[1]
   ax.plot(df['Admissions'], label='Admissions')
-  ax.plot(df['Admissions_7ma'], label='Admissions_7ma')
+  ax.plot(df['Admissions_ma7'], label='Admissions_ma7')
   ax.fill_between(x=df['Admissions'].index, y1=df['Admissions'].values)
-  ax.set_title('Slovakia Covid Hospital Admission Daily & 7ma', loc='left', y=0.9, x=0.02, fontsize='medium', backgroundcolor='white')
+  ax.set_title('Slovakia Covid Hospital Admission Daily & ma7', loc='left', y=0.9, x=0.02, fontsize='medium', backgroundcolor='white')
   ax.yaxis.set_major_locator(mticker.MultipleLocator(100))
   ax.yaxis.set_minor_locator(mticker.MultipleLocator(20))
   ax.set_xlabel(None)
