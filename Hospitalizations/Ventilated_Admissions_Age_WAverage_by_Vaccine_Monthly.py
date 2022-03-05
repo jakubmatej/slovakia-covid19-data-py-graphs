@@ -102,8 +102,12 @@ if is_uri_ok(uri):
   # Create marker labels
   yAnnotateOffset = 0.03
   for idx, row in result.iterrows():
-    ax.annotate(row['unvaccinated'].round(2), xy=(idx, row['unvaccinated']*(1-yAnnotateOffset)), fontsize=8, ha='center', va='top')
-    ax.annotate(row['vaccinated'].round(2), xy=(idx, row['vaccinated']*(1+yAnnotateOffset)), fontsize=8, ha='center', va='center')
+    if row['unvaccinated'] < row['vaccinated']:
+      ax.annotate(row['unvaccinated'].round(2), xy=(idx, row['unvaccinated']*(1-yAnnotateOffset)), fontsize=8, ha='center', va='top')
+      ax.annotate(row['vaccinated'].round(2), xy=(idx, row['vaccinated']*(1+yAnnotateOffset)), fontsize=8, ha='center', va='center')
+    else:
+      ax.annotate(row['unvaccinated'].round(2), xy=(idx, row['unvaccinated']*(1+yAnnotateOffset)), fontsize=8, ha='center', va='center')
+      ax.annotate(row['vaccinated'].round(2), xy=(idx, row['vaccinated']*(1-yAnnotateOffset)), fontsize=8, ha='center', va='top')
 
   # 1. Axis - Slovakia Covid Hospital Ventilated Admissions
   ax = axs[1]
